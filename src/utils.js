@@ -23,7 +23,7 @@ export const isString = (val) => {
   return typeof val === 'string' || val instanceof String;
 };
 
-export const isNumber = val => {
+export const isNumber = (val) => {
   return typeof val === 'number' && isFinite(val);
 };
 
@@ -70,3 +70,6 @@ export const getPredStatus = (pred, burnHeight = null) => {
   return PRED_STATUS_INIT;
 };
 
+export const isNotNullIn = (entity, key) => {
+  return key in entity && entity[key] !== null;
+};

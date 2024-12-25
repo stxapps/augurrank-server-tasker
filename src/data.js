@@ -1,7 +1,7 @@
 import { Datastore } from '@google-cloud/datastore';
 
 import { TOTAL, PRED_STATUS_CONFIRMED_OK, ALL } from './const';
-import { sleep, isObject, sample, getPredStatus } from './utils';
+import { sleep, isObject, sample, getPredStatus, isNotNullIn } from './utils';
 
 const datastore = new Datastore();
 
@@ -206,7 +206,7 @@ const entityToTotal = (entity) => {
     createDate: entity.createDate.getTime(),
     updateDate: entity.updateDate.getTime(),
   };
-  if ('anchor' in entity) total.anchor = entity.anchor;
+  if (isNotNullIn(entity, 'anchor')) total.anchor = entity.anchor;
 
   return total;
 };
