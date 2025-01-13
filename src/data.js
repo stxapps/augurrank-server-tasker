@@ -41,7 +41,8 @@ const _updateTotal = async (oldUser, newUser, oldPred, newPred) => {
   try {
     await transaction.run();
 
-    const [entities] = await transaction.get(keys);
+    const [_entities] = await transaction.get(keys);
+    const entities = mapEntities(keyNames, _entities);
 
     const newEntities = [], now = Date.now();
     let keyName, key, entity, formula, total, isFirst, contDay;
@@ -147,6 +148,7 @@ const _updateTotal = async (oldUser, newUser, oldPred, newPred) => {
     }
 
     // We can know if this is a new user by checking oldUser === null,
+    //   on the first upload of pred (status in mempool)
     //   but keep updating total users in Total might not good for performance.
     // Query count(*) from User is better.
 
@@ -209,6 +211,17 @@ const entityToTotal = (entity) => {
   if (isNotNullIn(entity, 'anchor')) total.anchor = entity.anchor;
 
   return total;
+};
+
+const mapEntities = (keyNames, _entities) => {
+  const entities = [];
+  for (const keyName of keyNames) {
+    const _entity = _entities.find(ett => {
+      return isObject(ett) && ett[datastore.KEY].name === keyName;
+    });
+    entities.push(isObject(_entity) ? _entity : null);
+  }
+  return entities;
 };
 
 const data = { updateTotal };

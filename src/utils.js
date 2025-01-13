@@ -11,7 +11,7 @@ export const runAsyncWrapper = (callback) => {
   }
 };
 
-export const sleep = ms => {
+export const sleep = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
@@ -20,7 +20,7 @@ export const isObject = (val) => {
 };
 
 export const isString = (val) => {
-  return typeof val === 'string' || val instanceof String;
+  return typeof val === 'string';
 };
 
 export const isNumber = (val) => {

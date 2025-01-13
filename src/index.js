@@ -31,17 +31,17 @@ app.post('/run', runAsyncWrapper(async (req, res) => {
   }
 
   const { oldUser, newUser, oldPred, newPred } = reqBody;
-  if (oldUser !== null || !isObject(oldUser)) {
+  if (oldUser !== null && !isObject(oldUser)) {
     console.log(`(${logKey}) Invalid oldUser, just end`);
     res.status(200).end();
     return;
   }
-  if (newUser !== null || !isObject(newUser)) {
+  if (!isObject(newUser)) {
     console.log(`(${logKey}) Invalid newUser, just end`);
     res.status(200).end();
     return;
   }
-  if (oldPred !== null || !isObject(oldPred)) {
+  if (oldPred !== null && !isObject(oldPred)) {
     console.log(`(${logKey}) Invalid oldPred, just end`);
     res.status(200).end();
     return;
