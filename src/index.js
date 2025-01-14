@@ -36,8 +36,13 @@ app.post('/run', runAsyncWrapper(async (req, res) => {
     res.status(200).end();
     return;
   }
-  if (!isObject(newUser)) {
+  if (newUser !== null && !isObject(newUser)) {
     console.log(`(${logKey}) Invalid newUser, just end`);
+    res.status(200).end();
+    return;
+  }
+  if (!isObject(oldUser) && !isObject(newUser)) {
+    console.log(`(${logKey}) Invalid oldUser and newUser, just end`);
     res.status(200).end();
     return;
   }

@@ -12,7 +12,7 @@ const _updateTotal = async (oldUser, newUser, oldPred, newPred) => {
   )
   if (!doAdd) return;
 
-  const { appBtcAddr } = newUser;
+  const { appBtcAddr } = isObject(newUser) ? newUser : oldUser;
   const { game, value: predValue } = newPred;
 
   const keyNames = [
