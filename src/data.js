@@ -214,12 +214,16 @@ const entityToTotal = (entity) => {
 };
 
 const mapEntities = (keyNames, _entities) => {
+  const knToEtt = {};
+  for (const ett of _entities) {
+    if (!isObject(ett)) continue;
+    knToEtt[ett[datastore.KEY].name] = ett;
+  }
+
   const entities = [];
   for (const keyName of keyNames) {
-    const _entity = _entities.find(ett => {
-      return isObject(ett) && ett[datastore.KEY].name === keyName;
-    });
-    entities.push(isObject(_entity) ? _entity : null);
+    const ett = knToEtt[keyName];
+    entities.push(isObject(ett) ? ett : null);
   }
   return entities;
 };
