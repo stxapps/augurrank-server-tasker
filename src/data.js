@@ -12,18 +12,17 @@ const _updateTotal = async (oldUser, newUser, oldPred, newPred) => {
   )
   if (!doAdd) return;
 
-  const { appBtcAddr } = isObject(newUser) ? newUser : oldUser;
-  const { game, value: predValue } = newPred;
+  const { stxAddr, game, value: predValue } = newPred;
 
   const keyNames = [
-    `${appBtcAddr}-${game}-${predValue}-confirmed_ok-count`,
-    `${appBtcAddr}-${game}-confirmed_ok-count-cont-day`,
-    `${appBtcAddr}-${game}-confirmed_ok-max-cont-day`,
-    `${appBtcAddr}-${predValue}-confirmed_ok-count`,
-    `${appBtcAddr}-confirmed_ok-count-cont-day`,
-    `${appBtcAddr}-confirmed_ok-max-cont-day`,
+    `${stxAddr}-${game}-${predValue}-confirmed_ok-count`,
+    `${stxAddr}-${game}-confirmed_ok-count-cont-day`,
+    `${stxAddr}-${game}-confirmed_ok-max-cont-day`,
+    `${stxAddr}-${predValue}-confirmed_ok-count`,
+    `${stxAddr}-confirmed_ok-count-cont-day`,
+    `${stxAddr}-confirmed_ok-max-cont-day`,
     `${game}-${predValue}-confirmed_ok-count`,
-    `${game}-count-appBtcAddr`,
+    `${game}-count-stxAddr`,
   ];
   const formulas = [
     `${predValue}-confirmed_ok-count`,
@@ -33,7 +32,7 @@ const _updateTotal = async (oldUser, newUser, oldPred, newPred) => {
     'confirmed_ok-count-cont-day',
     'confirmed_ok-max-cont-day',
     `${predValue}-confirmed_ok-count`,
-    'count-appBtcAddr',
+    'count-stxAddr',
   ];
   const keys = keyNames.map(kn => datastore.key([TOTAL, kn]));
 
@@ -52,7 +51,7 @@ const _updateTotal = async (oldUser, newUser, oldPred, newPred) => {
       total = entityToTotal(entity);
       [total.outcome, total.updateDate] = [total.outcome + 1, now];
     } else {
-      total = newTotal(keyName, appBtcAddr, game, formula, 1, now, now);
+      total = newTotal(keyName, stxAddr, game, formula, 1, now, now);
       isFirst = true;
     }
     newEntities.push({ key, data: totalToEntityData(total) });
@@ -69,7 +68,7 @@ const _updateTotal = async (oldUser, newUser, oldPred, newPred) => {
       total.updateDate = now;
     } else {
       total = newTotal(
-        keyName, appBtcAddr, game, formula, 1, now, now, newPred.createDate
+        keyName, stxAddr, game, formula, 1, now, now, newPred.createDate
       );
     }
     newEntities.push({ key, data: totalToEntityData(total) });
@@ -83,7 +82,7 @@ const _updateTotal = async (oldUser, newUser, oldPred, newPred) => {
         newEntities.push({ key, data: totalToEntityData(total) });
       }
     } else {
-      total = newTotal(keyName, appBtcAddr, game, formula, countCont, now, now);
+      total = newTotal(keyName, stxAddr, game, formula, countCont, now, now);
       newEntities.push({ key, data: totalToEntityData(total) });
     }
 
@@ -92,7 +91,7 @@ const _updateTotal = async (oldUser, newUser, oldPred, newPred) => {
       total = entityToTotal(entity);
       [total.outcome, total.updateDate] = [total.outcome + 1, now];
     } else {
-      total = newTotal(keyName, appBtcAddr, ALL, formula, 1, now, now);
+      total = newTotal(keyName, stxAddr, ALL, formula, 1, now, now);
     }
     newEntities.push({ key, data: totalToEntityData(total) });
 
@@ -108,7 +107,7 @@ const _updateTotal = async (oldUser, newUser, oldPred, newPred) => {
       total.updateDate = now;
     } else {
       total = newTotal(
-        keyName, appBtcAddr, ALL, formula, 1, now, now, newPred.createDate
+        keyName, stxAddr, ALL, formula, 1, now, now, newPred.createDate
       );
     }
     newEntities.push({ key, data: totalToEntityData(total) });
@@ -122,7 +121,7 @@ const _updateTotal = async (oldUser, newUser, oldPred, newPred) => {
         newEntities.push({ key, data: totalToEntityData(total) });
       }
     } else {
-      total = newTotal(keyName, appBtcAddr, ALL, formula, countCont, now, now);
+      total = newTotal(keyName, stxAddr, ALL, formula, countCont, now, now);
       newEntities.push({ key, data: totalToEntityData(total) });
     }
 
@@ -178,10 +177,10 @@ const getAt = (keyNames, keys, entities, formulas, i) => {
 };
 
 const newTotal = (
-  keyName, appBtcAddr, game, formula, outcome, createDate, updateDate, anchor = null
+  keyName, stxAddr, game, formula, outcome, createDate, updateDate, anchor = null
 ) => {
   const total = {
-    keyName, appBtcAddr, game, formula, outcome, createDate, updateDate,
+    keyName, stxAddr, game, formula, outcome, createDate, updateDate,
   };
   if (anchor !== null) total.anchor = anchor;
   return total;
@@ -189,7 +188,7 @@ const newTotal = (
 
 const totalToEntityData = (total) => {
   const data = [
-    { name: 'appBtcAddr', value: total.appBtcAddr },
+    { name: 'stxAddr', value: total.stxAddr },
     { name: 'game', value: total.game },
     { name: 'formula', value: total.formula },
     { name: 'outcome', value: total.outcome, excludeFromIndexes: true },
@@ -205,7 +204,7 @@ const totalToEntityData = (total) => {
 const entityToTotal = (entity) => {
   const total = {
     keyName: entity[datastore.KEY].name,
-    appBtcAddr: entity.appBtcAddr,
+    stxAddr: entity.stxAddr,
     game: entity.game,
     formula: entity.formula,
     outcome: entity.outcome,
