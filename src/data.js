@@ -153,9 +153,9 @@ const _updateTotal = async (oldUser, newUser, oldPred, newPred) => {
 
     transaction.save(newEntities);
     await transaction.commit();
-  } catch (e) {
+  } catch (error) {
     await transaction.rollback();
-    throw e;
+    throw error;
   }
 };
 
@@ -191,7 +191,7 @@ const totalToEntityData = (total) => {
     { name: 'stxAddr', value: total.stxAddr },
     { name: 'game', value: total.game },
     { name: 'formula', value: total.formula },
-    { name: 'outcome', value: total.outcome, excludeFromIndexes: true },
+    { name: 'outcome', value: total.outcome },
     { name: 'createDate', value: new Date(total.createDate) },
     { name: 'updateDate', value: new Date(total.updateDate) },
   ];
